@@ -40,15 +40,16 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const documentId = params.id;
+    const documentId = id;
     const body = await request.json();
     const { tags, name } = body;
 
