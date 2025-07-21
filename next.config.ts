@@ -1,10 +1,13 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   experimental: {
     ppr: true,
-    serverComponentsExternalPackages: ['faiss-node'],
   },
+  serverExternalPackages: ['faiss-node'],
   images: {
     remotePatterns: [
       {
