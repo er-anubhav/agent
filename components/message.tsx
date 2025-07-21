@@ -9,6 +9,7 @@ import { Markdown } from './markdown';
 import { MessageActions } from './message-actions';
 import { PreviewAttachment } from './preview-attachment';
 import { Weather } from './weather';
+import { RAGResult } from './rag-result';
 import equal from 'fast-deep-equal';
 import { cn, sanitizeText } from '@/lib/utils';
 import { Button } from './ui/button';
@@ -181,6 +182,55 @@ const PurePreviewMessage = ({
                   return (
                     <div key={toolCallId}>
                       <Weather weatherAtLocation={output} />
+                    </div>
+                  );
+                }
+              }
+
+              if (type === 'tool-ragSearch') {
+                const { toolCallId, state } = part;
+
+                if (state === 'input-available') {
+                  const { input } = part;
+                  return (
+                    <div key={toolCallId} className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 my-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-blue-700 dark:text-blue-300">
+                          Searching knowledge base for: "{input.query}"
+                        </span>
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (state === 'output-available') {
+                  const { output } = part;
+                  
+                  if ('error' in output) {
+                    return (
+                      <div
+                        key={toolCallId}
+                        className="text-red-500 p-3 border border-red-200 rounded-lg bg-red-50 dark:bg-red-950/20"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-red-600">⚠️</span>
+                          <span className="font-medium">Search Error:</span>
+                        </div>
+                        <p className="mt-1 text-sm">{output.error}</p>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div key={toolCallId}>
+                      <RAGResult
+                        query={output.query}
+                        answer={output.answer}
+                        sources={output.sources}
+                        chunks={output.chunks}
+                        confidence={output.confidence}
+                      />
                     </div>
                   );
                 }

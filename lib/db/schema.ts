@@ -115,6 +115,9 @@ export const document = pgTable(
     userId: uuid('userId')
       .notNull()
       .references(() => user.id),
+    source: varchar('source', { enum: ['upload', 'google-drive', 'notion', 'url'] })
+      .default('upload'),
+    sourceMetadata: json('sourceMetadata'),
   },
   (table) => {
     return {

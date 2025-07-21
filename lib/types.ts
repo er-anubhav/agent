@@ -3,6 +3,7 @@ import type { getWeather } from './ai/tools/get-weather';
 import type { createDocument } from './ai/tools/create-document';
 import type { updateDocument } from './ai/tools/update-document';
 import type { requestSuggestions } from './ai/tools/request-suggestions';
+import type { ragSearch } from './ai/tools/rag-search';
 import type { InferUITool, UIMessage } from 'ai';
 
 import type { ArtifactKind } from '@/components/artifact';
@@ -22,12 +23,14 @@ type updateDocumentTool = InferUITool<ReturnType<typeof updateDocument>>;
 type requestSuggestionsTool = InferUITool<
   ReturnType<typeof requestSuggestions>
 >;
+type ragSearchTool = InferUITool<ReturnType<typeof ragSearch>>;
 
 export type ChatTools = {
   getWeather: weatherTool;
   createDocument: createDocumentTool;
   updateDocument: updateDocumentTool;
   requestSuggestions: requestSuggestionsTool;
+  ragSearch: ragSearchTool;
 };
 
 export type CustomUIDataTypes = {
@@ -42,6 +45,13 @@ export type CustomUIDataTypes = {
   kind: ArtifactKind;
   clear: null;
   finish: null;
+  ragResult: {
+    query: string;
+    answer: string;
+    sources: string[];
+    chunks: number;
+    confidence: number;
+  };
 };
 
 export type ChatMessage = UIMessage<

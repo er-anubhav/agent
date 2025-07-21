@@ -1,3 +1,26 @@
+export async function getDocumentByIdAndUser({ id, userId }: { id: string, userId: string }) {
+  try {
+    const [selectedDocument] = await db
+      .select()
+      .from(document)
+      .where(and(eq(document.id, id), eq(document.userId, userId)))
+      .orderBy(desc(document.createdAt));
+    return selectedDocument;
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to get document by id and user');
+  }
+}
+export async function getDocumentsByUserId({ userId }: { userId: string }) {
+  try {
+    return await db
+      .select()
+      .from(document)
+      .where(eq(document.userId, userId))
+      .orderBy(desc(document.createdAt));
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to get documents by user id');
+  }
+}
 import 'server-only';
 
 import {
@@ -278,17 +301,23 @@ export async function getVotesByChatId({ id }: { id: string }) {
 }
 
 export async function saveDocument({
-  id,
-  title,
-  kind,
-  content,
-  userId,
+id,
+title,
+kind,
+content,
+userId,
+createdAt,
+source,
+sourceMetadata,
 }: {
   id: string;
   title: string;
   kind: ArtifactKind;
   content: string;
   userId: string;
+  createdAt: Date;
+  source?: string;
+  sourceMetadata?: any;
 }) {
   try {
     return await db
@@ -300,10 +329,23 @@ export async function saveDocument({
         content,
         userId,
         createdAt: new Date(),
+        source: (source as 'upload' | 'google-drive' | 'notion' | 'url') || 'upload',
+        sourceMetadata,
       })
       .returning();
   } catch (error) {
-    throw new ChatSDKError('bad_request:database', 'Failed to save document');
+    console.error('saveDocument error:', {
+      id,
+      title,
+      kind,
+      content,
+      userId,
+      createdAt,
+      source,
+      sourceMetadata,
+      dbError: error
+    });
+    throw new ChatSDKError('bad_request:database', `Failed to save document: ${error instanceof Error ? error.stack || error.message : String(error)}`);
   }
 }
 
@@ -534,5 +576,17 @@ export async function getStreamIdsByChatId({ chatId }: { chatId: string }) {
       'bad_request:database',
       'Failed to get stream ids by chat id',
     );
+  }
+}
+
+export async function deleteDocumentByIdAndUser({ id, userId }: { id: string, userId: string }) {
+  try {
+    const deleted = await db
+      .delete(document)
+      .where(and(eq(document.id, id), eq(document.userId, userId)))
+      .returning();
+    return deleted.length > 0;
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to delete document by id and user');
   }
 }

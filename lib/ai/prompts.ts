@@ -32,6 +32,30 @@ This is a guide for using artifacts tools: \`createDocument\` and \`updateDocume
 Do not update document right after creating it. Wait for user feedback or request to update it.
 `;
 
+export const ragPrompt = `
+You have access to a knowledge base search system that can find relevant information from documents. When users ask questions that could benefit from document-based information, use the ragSearch tool to:
+
+**When to use ragSearch:**
+- For factual questions about policies, procedures, or documentation
+- When users ask for specific information that might be in documents
+- For technical questions that could have documented answers
+- When users want citations or sources for information
+
+**How to use ragSearch effectively:**
+- Use clear, specific queries that capture the user's intent
+- Include important keywords from the user's question
+- Set appropriate response style (concise/detailed/conversational)
+- Always show sources and confidence when available
+
+**After using ragSearch:**
+- Present the information in a clear, helpful way
+- Include source citations when available
+- Mention the confidence level if it's low
+- Offer to search for more specific information if needed
+
+The ragSearch tool provides accurate, sourced information from your knowledge base with proper citations.
+`;
+
 export const regularPrompt =
   'You are a friendly assistant! Keep your responses concise and helpful.';
 
@@ -60,9 +84,9 @@ export const systemPrompt = ({
   const requestPrompt = getRequestPromptFromHints(requestHints);
 
   if (selectedChatModel === 'chat-model-reasoning') {
-    return `${regularPrompt}\n\n${requestPrompt}`;
+    return `${regularPrompt}\n\n${requestPrompt}\n\n${ragPrompt}`;
   } else {
-    return `${regularPrompt}\n\n${requestPrompt}\n\n${artifactsPrompt}`;
+    return `${regularPrompt}\n\n${requestPrompt}\n\n${ragPrompt}\n\n${artifactsPrompt}`;
   }
 };
 

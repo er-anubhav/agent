@@ -1,0 +1,172 @@
+{
+  "name": "Personal AI Assistant Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ]
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Bot Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Your Telegram Bot Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/bot/telegram",
+        "options": {
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "timeout": 30000
+        },
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "telegramUserId",
+              "value": "={{ $node['Telegram Bot Trigger'].json['message']['from']['id'] }}"
+            },
+            {
+              "name": "telegramChatId", 
+              "value": "={{ $node['Telegram Bot Trigger'].json['message']['chat']['id'] }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $node['Telegram Bot Trigger'].json['message']['text'] }}"
+            }
+          ]
+        }
+      },
+      "id": "process-message",
+      "name": "Process Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node['Telegram Bot Trigger'].json['message']['chat']['id'] }}",
+        "text": "={{ $node['Process Message'].json['reply'] }}",
+        "options": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "send-reply",
+      "name": "Send Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials", 
+          "name": "Your Telegram Bot Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $node['Process Message'].json['reply'] }}",
+              "operation": "contains",
+              "value2": "error"
+            }
+          ]
+        }
+      },
+      "id": "check-for-errors",
+      "name": "Check for Errors",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        450,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node['Telegram Bot Trigger'].json['message']['chat']['id'] }}",
+        "text": "❌ Sorry, I encountered an error. Please try again or contact support.",
+        "options": {}
+      },
+      "id": "send-error-reply",
+      "name": "Send Error Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        650,
+        500
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-credentials",
+          "name": "Your Telegram Bot Token" 
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Bot Trigger": {
+      "main": [
+        [
+          {
+            "node": "Process Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Message": {
+      "main": [
+        [
+          {
+            "node": "Send Reply",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check for Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Errors": {
+      "main": [
+        [
+          {
+            "node": "Send Error Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "timezone": "America/New_York"
+  },
+  "versionId": "1"
+}

@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { guestRegex, isDevelopmentEnvironment } from './lib/constants';
+import { isDevelopmentEnvironment } from './lib/constants';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -17,23 +17,29 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Allow bot API endpoints to be accessed without authentication
+  if (pathname.startsWith('/api/bot')) {
+    return NextResponse.next();
+  }
+
   const token = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET,
     secureCookie: !isDevelopmentEnvironment,
   });
 
-  if (!token) {
-    const redirectUrl = encodeURIComponent(request.url);
-
-    return NextResponse.redirect(
-      new URL(`/api/auth/guest?redirectUrl=${redirectUrl}`, request.url),
-    );
+  // If no token exists or user is a guest, redirect to login page
+  if (!token || (token as any)?.type === 'guest') {
+    // Allow access to login and register pages
+    if (['/login', '/register'].includes(pathname)) {
+      return NextResponse.next();
+    }
+    
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  const isGuest = guestRegex.test(token?.email ?? '');
-
-  if (token && !isGuest && ['/login', '/register'].includes(pathname)) {
+  // If user is authenticated (and not a guest) and tries to access login/register, redirect to home
+  if (token && (token as any)?.type !== 'guest' && ['/login', '/register'].includes(pathname)) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
