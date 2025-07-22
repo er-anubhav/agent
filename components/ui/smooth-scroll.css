@@ -1,0 +1,50 @@
+/* Smooth scrolling optimizations */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  .fade-in {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Optimize scrolling performance */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Improve rendering performance */
+.parallax-bg {
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.fade-in {
+  will-change: opacity, transform;
+}
+
+/* Hardware acceleration for smooth animations */
+.animated-square {
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* Smooth scroll container optimization */
+#smooth-wrapper {
+  overflow-x: hidden;
+}
+
+#smooth-content {
+  will-change: transform;
+  transform-style: preserve-3d;
+}

@@ -5,12 +5,6 @@ import { CircularTestimonials } from '@/components/ui/circular-testimonials';
 // Testimonial data for different user types
 const testimonials = [
   {
-    quote: "As a team lead, I was spending hours searching for information across Slack, Notion, and Google Drive. InfoAssist changed everything - I can ask questions naturally and get instant answers with source citations. It's like having a senior team member who knows everything.",
-    name: "Sarah Chen",
-    designation: "Engineering Team Lead, TechCorp",
-    src: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
-  },
-  {
     quote: "Our onboarding process used to take weeks for new developers to find relevant documentation. With InfoAssist, new team members can instantly access our entire knowledge base through natural language queries. It's reduced our onboarding time by 70%.",
     name: "Marcus Johnson",
     designation: "Head of Developer Experience, StartupX",

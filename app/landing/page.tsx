@@ -1,8 +1,8 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/landing/Navbar';
 import Hero from '@/components/landing/hero';
-import { div } from 'framer-motion/client';
+import { motion } from 'framer-motion';
 import { ContainerScroll } from '@/components/ui/container-scroll';
 import Image from 'next/image';
 import { AnimatedList } from '@/components/ui/animated-list';
@@ -12,17 +12,30 @@ import AudienceSection from '@/components/landing/audience-section';
 import { NirvanaFaq } from '@/components/ui/faq-nirvana';
 import CTASection from '@/components/landing/cta-section';
 import FooterLayout from '@/components/landing/footer';
-import { motion } from 'framer-motion';
 import { HeroVideoDialog } from '@/components/ui/hero-video-dialog';
 import NotificationBar from '@/components/landing/notification-bar';
+import Squares from '@/components/ui/Squares';
+import SmoothScroll from '@/components/ui/SmoothScroll';
 
 export default function Home() {
   // Demo state for testing different navbar configurations
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [user] = useState({
     name: 'Alex Johnson',
     avatarUrl: '' // Leave empty to show initials
   });
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Display cards configuration
   const defaultCards = [
@@ -126,27 +139,52 @@ export default function Home() {
   };
   return (
 <>    
-  {/* Notification Bar */}
-  <NotificationBar />
+  <SmoothScroll speed={1.5} effects={false}>
+    {/* Notification Bar */}
+    <NotificationBar />
 
-  <div 
-      className="relative min-h-screen w-full overflow-hidden bg-black font-serif font-light text-white antialiased pt-16"
-      style={{
-        background: "linear-gradient(135deg, #000000 0%, #1a1a1a 100%)",
-      }}
-    >      {/* Navbar Component */}
-      <Navbar
-        isAuthenticated={isAuthenticated}
-        user={user}
-        onLogout={handleLogout}
-        title="InfoAssist"
-      /> 
+    <div 
+        className="relative min-h-screen w-full overflow-hidden bg-black font-serif font-light text-white antialiased pt-16"
+        style={{
+          background: "linear-gradient(135deg, #000000 0%, #1a1a1a 100%)",
+        }}
+      >
+        {/* Squares Background - Only on desktop for performance */}
+        {!isMobile && (
+          <div className="absolute inset-0 z-0 parallax-bg">
+            <Squares 
+              speed={0.2} 
+              squareSize={60}
+              direction='diagonal'
+              borderColor='#fff'
+              hoverFillColor='#222'
+              className="opacity-10"
+            />
+          </div>
+        )}
+        
+        {/* Simple background pattern for mobile */}
+        {isMobile && (
+          <div className="absolute inset-0 z-0" style={{
+            backgroundImage: `linear-gradient(45deg, transparent 47%, rgba(255,255,255,0.05) 48%, rgba(255,255,255,0.05) 52%, transparent 53%), linear-gradient(-45deg, transparent 47%, rgba(255,255,255,0.05) 48%, rgba(255,255,255,0.05) 52%, transparent 53%)`,
+            backgroundSize: '60px 60px'
+          }} />
+        )}
+        
+        {/* Navbar Component */}
+        <Navbar
+          isAuthenticated={isAuthenticated}
+          user={user}
+          onLogout={handleLogout}
+          title="InfoAssist"
+        /> 
 
-      {/* Hero Section */}
-      <Hero />
-
+        {/* Hero Section */}
+        <div className={!isMobile ? "fade-in" : ""}>
+          <Hero />
+        </div>
       {/* Animated List Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <section className={`px-4 py-16 sm:px-6 lg:px-8 ${!isMobile ? "fade-in" : ""}`}>
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-4xl text-white">Common Challenges</h2>
@@ -216,7 +254,7 @@ export default function Home() {
             </div>
           </div>
         </div>      </section>      {/* Key Features Section */}
-      <section className="px-4 py-16 mt-4 sm:px-6 lg:px-8">
+      <section className={`px-4 py-16 mt-4 sm:px-6 lg:px-8 ${!isMobile ? "fade-in" : ""}`}>
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-3xl text-white">Core Features</h2>
@@ -228,11 +266,13 @@ export default function Home() {
           <FeatureGrid features={keyFeatures} columns={3} />
         </div>
       </section>      {/* Audience Section */}
-      <AudienceSection />
+      <div className={!isMobile ? "fade-in" : ""}>
+        <AudienceSection />
+      </div>
 
       {/* Video Demo Section */}
         <motion.div
-          className="relative mt-16 mb-16"
+          className={`relative mt-16 mb-16 ${!isMobile ? "fade-in" : ""}`}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
@@ -254,15 +294,22 @@ export default function Home() {
             thumbnailAlt="Watch InfoAssist Platform Demo - AI Knowledge Assistant in Action"
             className="max-w-4xl mx-auto overflow-hidden border shadow-2xl rounded-2xl border-white/20 shadow-black/10"
           />
-        </motion.div>      {/* FAQ Section */}
-      <NirvanaFaq />
+        </motion.div>
+
+      {/* FAQ Section */}
+      <div className={!isMobile ? "fade-in" : ""}>
+        <NirvanaFaq />
+      </div>
 
       {/* Call to Action Section */}
-      <CTASection />
+      <div className={!isMobile ? "fade-in" : ""}>
+        <CTASection />
+      </div>
 
       {/* Footer */}
       <FooterLayout />
     </div>
+  </SmoothScroll>
     </>
   );
 }
