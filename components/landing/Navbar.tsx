@@ -181,11 +181,18 @@ const Navbar: React.FC<NavbarProps> = ({
               </div>
             ) : (
               /* Unauthenticated - Login/Register Buttons */
-              <div className="hidden sm:flex sm:items-center sm:space-x-3">                <Link
+              <div className="hidden sm:flex sm:items-center sm:space-x-3">
+                <Link
                   href="/login"
-                  className="px-4 py-2 text-sm text-white border rounded-md border-white/20 "
+                  className="px-4 py-2 text-sm text-white border rounded-md border-white/20 hover:bg-white/10 transition-colors duration-200"
                 >
                   Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="px-4 py-2 text-sm text-white bg-[#9b87f5] rounded-md hover:bg-[#7c3aed] transition-colors duration-200"
+                >
+                  Register
                 </Link>
               </div>
             )}
