@@ -78,6 +78,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <Toaster position="top-center" />
+          <Analytics/>
           <SessionProvider>{children}</SessionProvider>
         </ThemeProvider>
       </body>
