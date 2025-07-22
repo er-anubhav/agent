@@ -28,18 +28,18 @@ export async function middleware(request: NextRequest) {
     secureCookie: !isDevelopmentEnvironment,
   });
 
-  // If no token exists or user is a guest, redirect to login page
+  // If no token exists or user is a guest, redirect to landing page
   if (!token || (token as any)?.type === 'guest') {
-    // Allow access to login and register pages
-    if (['/login', '/register'].includes(pathname)) {
+    // Allow access to landing, login and register pages
+    if (['/landing', '/login', '/register'].includes(pathname)) {
       return NextResponse.next();
     }
     
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL('/landing', request.url));
   }
 
-  // If user is authenticated (and not a guest) and tries to access login/register, redirect to home
-  if (token && (token as any)?.type !== 'guest' && ['/login', '/register'].includes(pathname)) {
+  // If user is authenticated (and not a guest) and tries to access landing/login/register, redirect to home
+  if (token && (token as any)?.type !== 'guest' && ['/landing', '/login', '/register'].includes(pathname)) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
@@ -51,6 +51,7 @@ export const config = {
     '/',
     '/chat/:id',
     '/api/:path*',
+    '/landing',
     '/login',
     '/register',
 

@@ -90,7 +90,7 @@ export function SidebarUserNav({ user }: { user: User }) {
                   }
 
                   signOut({
-                    redirectTo: '/login',
+                    redirectTo: '/landing',
                   });
                 }}
               >

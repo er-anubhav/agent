@@ -144,9 +144,9 @@ export default function DocumentsPage() {
   return (
     <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex mt-6 items-center justify-between">
           <div>
-            <h1 className="text-3xl">Documents</h1>
+            <h1 className="text-2xl">Documents</h1>
             <p className="text-muted-foreground">
               Manage your uploaded documents and their processing status
             </p>

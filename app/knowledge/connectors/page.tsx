@@ -251,9 +251,9 @@ export default function ConnectorsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex  mt-6 items-center justify-between">
         <div>
-          <h1 className="text-3xl">Connectors</h1>
+          <h1 className="text-2xl">Connectors</h1>
           <p className="text-muted-foreground">
             Connect external services to automatically sync your knowledge base
           </p>

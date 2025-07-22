@@ -10,9 +10,9 @@ import { redirect } from 'next/navigation';
 export default async function Page() {
   const session = await auth();
 
-  // Redirect to login if user is not authenticated or is a guest
+  // Redirect to landing if user is not authenticated or is a guest
   if (!session || !session.user || session.user.type === 'guest') {
-    redirect('/login');
+    redirect('/landing');
   }
 
   const id = generateUUID();

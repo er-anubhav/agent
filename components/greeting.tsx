@@ -11,7 +11,7 @@ export const Greeting = () => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 10 }}
         transition={{ delay: 0.5 }}
-        className="text-2xl"
+        className="text-xl text-black dark:text-white"
       >
         Hello there!
       </motion.div>
@@ -20,7 +20,7 @@ export const Greeting = () => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 10 }}
         transition={{ delay: 0.6 }}
-        className="text-2xl text-zinc-500"
+        className="text-xl text-black dark:text-white"
       >
         How can I help you today?
       </motion.div>

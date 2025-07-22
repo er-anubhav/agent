@@ -15,8 +15,9 @@ export interface DocumentChunk {
 
 export interface VectorStoreConfig {
   dimension: number;
-  indexType?: 'faiss' | 'qdrant';
-  persistPath?: string;
+  indexType?: 'pinecone' | 'qdrant';
+  indexName?: string;
+  namespace?: string;
 }
 
 export interface SearchResult {

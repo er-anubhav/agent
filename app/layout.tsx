@@ -1,9 +1,23 @@
 import { Toaster } from 'sonner';
 import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Montserrat, JetBrains_Mono } from 'next/font/google';
+import { Analytics } from "@vercel/analytics/next"
 
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains-mono',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://infoassist.tech'),
@@ -56,7 +70,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased">
+      <body className={`${montserrat.variable} ${jetbrainsMono.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

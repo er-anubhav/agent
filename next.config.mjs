@@ -2,8 +2,9 @@
 const nextConfig = {
   serverExternalPackages: ['sharp'],
   images: {
-    domains: ['localhost', 'infoassist.tech'],
+    domains: ['localhost', 'infoassist.tech', 'avatar.vercel.sh', 'blocks.mvp-subha.me'],
     formats: ['image/avif', 'image/webp'],
+    unoptimized: false,
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {

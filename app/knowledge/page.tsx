@@ -66,9 +66,9 @@ export default function KnowledgePage() {
   return (
     <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex mt-6 items-center justify-between">
           <div>
-            <h1 className="text-3xl">Knowledge Base</h1>
+            <h1 className="text-2xl">Knowledge Base</h1>
             <p className="text-muted-foreground">
               Manage your documents and data sources for AI-powered search
             </p>

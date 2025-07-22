@@ -70,7 +70,7 @@ agent/
   components/         # UI components (chat, artifacts, sidebar, etc.)
   hooks/              # Custom React hooks
   lib/                # Core logic (AI, DB, ingestion, utils, etc.)
-  vector-store/       # Vector search and FAISS integration
+  vector-store/       # Vector search and Pinecone integration
   public/             # Static assets
   artifacts/          # Artifact handlers (text, code, image, sheet)
   ...
@@ -84,7 +84,7 @@ agent/
 - **TypeScript**
 - **React** (with hooks and context)
 - **Drizzle ORM** (PostgreSQL)
-- **FAISS** (Vector search)
+- **Pinecone** (Vector search)
 - **OpenAI / Gemini / LLMs**
 - **Tailwind CSS** (for styling)
 - **Vercel** (deployment & observability)
@@ -104,11 +104,23 @@ agent/
    ```
 3. **Configure environment:**
    - Copy `.env.example` to `.env.local` and fill in required values (Postgres URL, API keys, etc).
-4. **Run the development server:**
+
+4. **Set up Pinecone (Vector Database):**
+   ```sh
+   # Get your API key from https://pinecone.io
+   # Add to .env.local:
+   # PINECONE_API_KEY=your_api_key_here
+   # PINECONE_INDEX_NAME=chatbot-vectors
+   
+   # Create the Pinecone index
+   npm run pinecone:setup
+   ```
+
+5. **Run the development server:**
    ```sh
    npm run dev
    ```
-5. **Open [http://localhost:3000](http://localhost:3000) in your browser.**
+6. **Open [http://localhost:3000](http://localhost:3000) in your browser.**
 
 ---
 
